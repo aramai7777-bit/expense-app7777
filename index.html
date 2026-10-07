@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>مصاريفي الشهرية | Eng: Anas Mohamed</title>
+  <meta name="theme-color" content="#0f766e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="مصاريفي">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f766e'/%3E%3Crect x='14' y='20' width='36' height='26' rx='6' fill='white'/%3E%3Ccircle cx='42' cy='33' r='4' fill='%230f766e'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --bg: #eef5f3;
+  --surface: #ffffff;
+  --soft: #f5faf8;
+  --ink: #0f2e2a;
+  --muted: #587570;
+  --line: #dbe7e4;
+  --brand: #0f766e;
+  --brand-dark: #0a4f4a;
+  --brand-soft: #d9f0ec;
+  --income: #0b8a5f;
+  --income-bg: #dcf3e9;
+  --expense: #d33a22;
+  --expense-bg: #fde7e2;
+  --warn-bg: #fdf1d3;
+  --warn-line: #ecd18f;
+  --warn-ink: #7a4b00;
+  --radius: 16px;
+  --shadow: 0 1px 2px rgba(15, 46, 42, 0.06), 0 10px 28px rgba(15, 46, 42, 0.07);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  background:
+    radial-gradient(900px 300px at 100% -80px, #cdeee8 0%, transparent 70%),
+    var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+[hidden] { display: none !important; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+:focus-visible { outline: 3px solid #2aa597; outline-offset: 2px; }
+
+/* ---------- Icons ---------- */
+
+.ico { display: inline-flex; vertical-align: middle; }
+.ico svg { width: 1.25em; height: 1.25em; }
+
+/* ---------- Lock ---------- */
+
+html.locked body { overflow: hidden; }
+html.locked .topbar,
+html.locked .page,
+html.locked .footer { visibility: hidden; }
+
+.lock {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #0a4f4a, #0f766e 60%, #12968b);
+  color: #fff;
+  padding: 20px;
+}
+
+html.locked .lock { display: flex; }
+
+.lock__box {
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.lock__badge {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.16);
+  display: grid;
+  place-items: center;
+  font-size: 1.6rem;
+}
+
+.lock h2 { font-size: 1.2rem; margin-top: 4px; }
+
+.dots { display: flex; gap: 14px; margin: 10px 0 2px; direction: ltr; }
+.dots i {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  transition: background 0.12s;
+}
+.dots i.on { background: #fff; }
+.dots.shake { animation: shake 0.35s; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.lock__msg { min-height: 1.6em; font-size: 0.9rem; color: #ffd9d1; }
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+  direction: ltr;
+}
+
+.keypad button {
+  font: inherit;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  border: none;
+  border-radius: 50%;
+  aspect-ratio: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.12s, transform 0.08s;
+}
+
+.keypad button:hover { background: rgba(255, 255, 255, 0.24); }
+.keypad button:active { transform: scale(0.94); }
+
+.link-btn {
+  font: inherit;
+  font-size: 0.85rem;
+  background: none;
+  border: none;
+  color: #cdeee8;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* ---------- Top bar ---------- */
+
+.topbar {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar__inner {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.who { display: flex; align-items: center; gap: 10px; }
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--brand), #14b8a6);
+  color: #fff;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.author {
+  font-size: 1.05rem;
+  font-weight: 700;
+  direction: ltr;
+  letter-spacing: 0.01em;
+}
+
+.topbar__tools { display: flex; gap: 8px; }
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--soft);
+  color: var(--brand);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+  transition: background 0.15s;
+}
+
+.icon-btn:hover { background: var(--brand-soft); }
+.icon-btn--plain { border: none; background: transparent; color: var(--muted); }
+
+/* ---------- Page ---------- */
+
+.page {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 20px 20px 40px;
+  flex: 1;
+}
+
+.hero-card {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  border-radius: 22px;
+  padding: 22px;
+  background: linear-gradient(135deg, #0a4f4a 0%, #0f766e 60%, #0d8a80 100%);
+  box-shadow: 0 14px 34px rgba(15, 118, 110, 0.28);
+  margin-bottom: 14px;
+}
+
+.hero-card::before,
+.hero-card::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  pointer-events: none;
+}
+.hero-card::before { width: 220px; height: 220px; top: -90px; left: -60px; }
+.hero-card::after { width: 140px; height: 140px; bottom: -60px; right: 30%; }
+
+.hero-card.is-negative {
+  background: linear-gradient(135deg, #7f1d12 0%, #b3301b 60%, #c9442c 100%);
+  box-shadow: 0 14px 34px rgba(179, 48, 27, 0.28);
+}
+
+.hero-card__top {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.hero-card__label { font-size: 0.9rem; opacity: 0.9; }
+
+.hero-card__value {
+  display: block;
+  font-size: clamp(2rem, 7vw, 3rem);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.month-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 6px 10px;
+}
+
+.month-picker input {
+  font: inherit;
+  font-size: 0.9rem;
+  color: #fff;
+  background: transparent;
+  border: none;
+  color-scheme: dark;
+  width: 150px;
+}
+
+.hero-card__chips {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+
+.chip__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.chip__icon--in { background: #b8f0d8; color: #0b6b49; }
+.chip__icon--out { background: #ffd6cd; color: #a8301b; }
+
+.chip__text { display: flex; flex-direction: column; line-height: 1.4; min-width: 0; }
+.chip__text small { font-size: 0.78rem; opacity: 0.9; }
+.chip__text strong { font-size: 1.05rem; }
+
+.status {
+  min-height: 1.6em;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+  color: var(--income);
+}
+
+.status.is-warning {
+  color: var(--warn-ink);
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-line);
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+
+/* ---------- How to ---------- */
+
+.howto {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 4px 14px;
+  margin-bottom: 14px;
+  font-size: 0.9rem;
+}
+
+.howto summary {
+  cursor: pointer;
+  padding: 8px 0;
+  font-weight: 500;
+  color: var(--brand);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+}
+.howto summary::-webkit-details-marker { display: none; }
+.howto .chev { margin-inline-start: auto; transition: transform 0.2s; }
+.howto[open] .chev { transform: rotate(180deg); }
+.howto ol { padding: 0 20px 10px 0; color: var(--muted); }
+.howto li { margin-bottom: 2px; }
+
+/* ---------- Panels ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+}
+
+.panel h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.panel h2 .ico { color: var(--brand); }
+
+.panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.panel__head h2 { margin-bottom: 0; }
+
+.tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.tools select { width: auto; }
+
+/* ---------- Form ---------- */
+
+.toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.toggle input { position: absolute; opacity: 0; pointer-events: none; }
+
+.toggle label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.toggle label .ico { font-size: 1.1rem; }
+.toggle label span { display: flex; flex-direction: column; line-height: 1.35; }
+.toggle label small { font-size: 0.75rem; font-weight: 400; }
+
+#typeExpense:checked + label { background: var(--expense-bg); border-color: #f1b3a7; color: var(--expense); }
+#typeIncome:checked + label { background: var(--income-bg); border-color: #9fd9bf; color: var(--income); }
+.toggle input:focus-visible + label { outline: 3px solid #2aa597; outline-offset: 2px; }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  min-width: 0;
+}
+
+fieldset.field legend { font-size: 0.9rem; font-weight: 500; margin-bottom: 6px; padding: 0; }
+
+.row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.row .field[hidden] { display: none; }
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="password"],
+select {
+  font: inherit;
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--soft);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 9px 12px;
+  width: 100%;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+input:focus, select:focus { background: #fff; border-color: var(--brand); outline: none; }
+input.invalid { border-color: var(--expense); }
+
+.money { position: relative; display: block; }
+.money input { padding-inline-end: 48px; font-size: 1.1rem; font-weight: 500; -moz-appearance: textfield; appearance: textfield; }
+.money input::-webkit-outer-spin-button,
+.money input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.money b {
+  position: absolute;
+  inset-inline-end: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.error { color: var(--expense); font-size: 0.8rem; font-weight: 400; min-height: 1.2em; }
+.hint { color: var(--muted); font-weight: 400; font-size: 0.8rem; }
+.optional { font-style: normal; font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+
+/* category chips */
+
+.cats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+
+.cat input { position: absolute; opacity: 0; pointer-events: none; }
+
+.cat label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 4px 8px;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 500;
+  background: var(--soft);
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+
+.cat label:hover { background: #fff; }
+
+.cat__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--c) 15%, white);
+  color: var(--c);
+}
+
+.cat input:checked + label {
+  border-color: var(--c);
+  background: color-mix(in srgb, var(--c) 9%, white);
+  box-shadow: 0 0 0 1px var(--c) inset;
+}
+.cat input:focus-visible + label { outline: 3px solid #2aa597; outline-offset: 2px; }
+
+/* buttons */
+
+.btn {
+  font: inherit;
+  font-weight: 700;
+  width: 100%;
+  background: linear-gradient(135deg, var(--brand), #12968b);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 11px 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 6px 16px rgba(15, 118, 110, 0.25);
+  transition: transform 0.1s, filter 0.15s;
+}
+
+.btn:hover { filter: brightness(1.06); }
+.btn:active { transform: scale(0.98); }
+
+.btn--ghost {
+  width: auto;
+  background: var(--soft);
+  color: var(--brand);
+  border: 1.5px solid var(--line);
+  font-weight: 500;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  box-shadow: none;
+}
+.btn--ghost:hover { background: var(--brand-soft); filter: none; }
+.btn--danger { color: var(--expense); }
+.btn--danger:hover { background: var(--expense-bg); }
+
+/* ---------- Chart ---------- */
+
+.chart-wrap { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+
+.donut {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: var(--line);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.donut::after { content: ""; position: absolute; inset: 24px; background: var(--surface); border-radius: 50%; }
+
+.donut__center {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.3;
+}
+.donut__center small { font-size: 0.75rem; color: var(--muted); }
+.donut__center strong { font-size: 1.15rem; }
+
+.legend { list-style: none; flex: 1; min-width: 150px; display: flex; flex-direction: column; gap: 8px; font-size: 0.88rem; }
+.legend li { display: flex; align-items: center; gap: 8px; }
+.legend .cat__icon { width: 28px; height: 28px; border-radius: 9px; }
+.legend .cat__icon svg { width: 1em; height: 1em; }
+.legend .name { flex: 1; }
+.legend .amt { color: var(--muted); font-size: 0.82rem; }
+.legend .pct { font-weight: 700; min-width: 2.6em; text-align: end; }
+
+.empty {
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding: 14px 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---------- Transactions ---------- */
+
+.tx-list { list-style: none; display: flex; flex-direction: column; }
+
+.tx {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.tx:last-child { border-bottom: none; }
+
+.tx__icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: color-mix(in srgb, var(--c) 15%, white);
+  color: var(--c);
+}
+
+.tx__main { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.4; }
+.tx__main strong { font-size: 0.95rem; }
+.tx__main small { color: var(--muted); font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.tx__meta { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.4; }
+.tx__amt { font-weight: 700; font-size: 0.98rem; white-space: nowrap; }
+.tx__meta small { color: var(--muted); font-size: 0.75rem; white-space: nowrap; }
+.amt--income { color: var(--income); }
+.amt--expense { color: var(--expense); }
+
+.person {
+  display: inline-block;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  border-radius: 99px;
+  padding: 0 8px;
+  font-size: 0.72rem;
+  margin-inline-start: 4px;
+}
+
+.del {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+}
+.del:hover { color: var(--expense); background: var(--expense-bg); }
+
+.footer { text-align: center; padding: 18px; font-size: 0.85rem; color: var(--muted); direction: ltr; }
+
+/* ---------- Dialogs ---------- */
+
+dialog {
+  border: none;
+  border-radius: 20px;
+  padding: 20px;
+  width: min(440px, calc(100vw - 28px));
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 24px 60px rgba(8, 36, 33, 0.35);
+  margin: auto;
+}
+
+dialog::backdrop { background: rgba(8, 36, 33, 0.5); backdrop-filter: blur(2px); }
+
+.dlg__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.dlg__head h2 { font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
+.dlg__head h2 .ico { color: var(--brand); }
+.dlg__note { font-size: 0.85rem; color: var(--muted); margin-bottom: 12px; }
+.dlg__note--warn { background: var(--warn-bg); color: var(--warn-ink); border-radius: 12px; padding: 8px 12px; margin-top: 8px; }
+.dlg__state { font-weight: 700; margin-bottom: 10px; color: var(--brand); }
+.dlg__msg { min-height: 1.4em; font-size: 0.85rem; margin: 6px 0; color: var(--expense); }
+.dlg__msg.ok { color: var(--income); }
+.dlg__actions { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+.dlg__actions--wrap { flex-direction: row; flex-wrap: wrap; }
+.dlg__actions--wrap .btn { flex: 1 1 auto; }
+
+dialog h3 { font-size: 0.92rem; margin: 14px 0 6px; }
+dialog p { font-size: 0.88rem; }
+
+.inline { display: flex; gap: 8px; align-items: center; }
+.inline input { flex: 1; }
+
+.members { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.members li {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--brand-soft);
+  color: var(--brand-dark);
+  border-radius: 99px;
+  padding: 2px 4px 2px 12px;
+  font-size: 0.85rem;
+}
+.members button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+.members button:hover { background: rgba(0, 0, 0, 0.08); }
+
+.file-btn { cursor: pointer; }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 760px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .page { padding: 14px 14px 32px; }
+  .hero-card { padding: 18px; border-radius: 20px; }
+  .hero-card__top { flex-direction: column-reverse; align-items: stretch; }
+  .month-picker { align-self: flex-start; }
+  .topbar__inner { padding: 8px 14px; }
+}
+
+@media (max-width: 380px) {
+  .hero-card__chips { grid-template-columns: minmax(0, 1fr); }
+  .cats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+
+/* ---------- Icon sizing inside bubbles/buttons ---------- */
+
+.cat__icon svg,
+.tx__icon svg { width: 22px; height: 22px; }
+.del svg { width: 18px; height: 18px; }
+.members button svg { width: 14px; height: 14px; }
+
+.author { white-space: nowrap; }
+
+@media (max-width: 480px) {
+  .author { font-size: 0.95rem; }
+  .icon-btn { width: 36px; height: 36px; border-radius: 11px; }
+  .topbar__tools { gap: 6px; }
+  .avatar { width: 32px; height: 32px; border-radius: 10px; }
+  .who { gap: 8px; }
+}
+
+</style>
+  <script>
+    /* Hide the page right away if a PIN lock is set (avoids a flash of content) */
+    try { if (localStorage.getItem("expense-calculator-lock-v1")) document.documentElement.classList.add("locked"); } catch (e) {}
+  </script>
+</head>
+<body>
+
+  <!-- ===== Lock screen ===== -->
+  <div class="lock" id="lockScreen" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
+    <div class="lock__box">
+      <span class="lock__badge"><i class="ico" data-icon="lock"></i></span>
+      <h2 id="lockTitle">اكتب الرقم السري</h2>
+      <div class="dots" id="pinDots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <p class="lock__msg" id="lockMsg" role="alert"></p>
+      <div class="keypad" id="keypad">
+        <button type="button" data-key="1">1</button>
+        <button type="button" data-key="2">2</button>
+        <button type="button" data-key="3">3</button>
+        <button type="button" data-key="4">4</button>
+        <button type="button" data-key="5">5</button>
+        <button type="button" data-key="6">6</button>
+        <button type="button" data-key="7">7</button>
+        <button type="button" data-key="8">8</button>
+        <button type="button" data-key="9">9</button>
+        <span></span>
+        <button type="button" data-key="0">0</button>
+        <button type="button" data-key="back" aria-label="مسح رقم"><i class="ico" data-icon="delete"></i></button>
+      </div>
+      <button type="button" class="link-btn" id="forgotPin">نسيت الرقم السري؟</button>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="who">
+        <span class="avatar" aria-hidden="true">A</span>
+        <span class="author">Eng: Anas Mohamed</span>
+      </div>
+      <div class="topbar__tools">
+        <button type="button" class="icon-btn" id="installBtn" aria-label="ثبّت التطبيق على موبايلك" title="ثبّت التطبيق"><i class="ico" data-icon="smartphone"></i></button>
+        <button type="button" class="icon-btn" id="familyBtn" aria-label="الأسرة والنسخ الاحتياطي" title="الأسرة والنسخ الاحتياطي"><i class="ico" data-icon="users"></i></button>
+        <button type="button" class="icon-btn" id="lockBtn" aria-label="القفل بالرقم السري" title="القفل بالرقم السري"><i class="ico" data-icon="lock"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+
+    <section class="hero-card" id="heroCard" aria-label="ملخص الشهر">
+      <div class="hero-card__top">
+        <div>
+          <p class="hero-card__label">الباقي معاك</p>
+          <strong class="hero-card__value" id="balance">0 ج.م</strong>
+        </div>
+        <label class="month-picker">
+          <span class="sr-only">الشهر</span>
+          <input type="month" id="monthPicker">
+        </label>
+      </div>
+      <div class="hero-card__chips">
+        <div class="chip">
+          <span class="chip__icon chip__icon--in"><i class="ico" data-icon="arrow-in"></i></span>
+          <span class="chip__text"><small>فلوس دخلتلك</small><strong id="totalIncome">0 ج.م</strong></span>
+        </div>
+        <div class="chip">
+          <span class="chip__icon chip__icon--out"><i class="ico" data-icon="arrow-out"></i></span>
+          <span class="chip__text"><small>فلوس صرفتها</small><strong id="totalExpense">0 ج.م</strong></span>
+        </div>
+      </div>
+    </section>
+
+    <p class="status" id="saveStatus" role="status"></p>
+
+    <details class="howto">
+      <summary><i class="ico" data-icon="help"></i> إزاي أستخدم الموقع؟ <i class="ico chev" data-icon="chevron"></i></summary>
+      <ol>
+        <li>اختار <b>مصروف</b> لو صرفت فلوس، أو <b>دخل</b> لو استلمت فلوس.</li>
+        <li>اكتب المبلغ، واختار بتصرفه على إيه (أو الفلوس جاية منين).</li>
+        <li>دوس <b>إضافة</b>، وهتلاقي الأرقام فوق اتحدّثت لوحدها.</li>
+      </ol>
+    </details>
+
+    <div class="grid">
+
+      <section class="panel" aria-labelledby="formTitle">
+        <h2 id="formTitle"><i class="ico" data-icon="plus-circle"></i> إضافة عملية جديدة</h2>
+        <form id="txForm" novalidate>
+
+          <div class="toggle" role="radiogroup" aria-label="نوع العملية">
+            <input type="radio" name="type" id="typeExpense" value="expense" checked>
+            <label for="typeExpense"><i class="ico" data-icon="arrow-out"></i><span><strong>مصروف</strong><small>فلوس طلعت مني</small></span></label>
+            <input type="radio" name="type" id="typeIncome" value="income">
+            <label for="typeIncome"><i class="ico" data-icon="arrow-in"></i><span><strong>دخل</strong><small>فلوس دخلتلي</small></span></label>
+          </div>
+
+          <label class="field">
+            <span>المبلغ</span>
+            <span class="money">
+              <input type="number" id="amount" min="0" step="0.01" inputmode="decimal" placeholder="مثال: 350">
+              <b>ج.م</b>
+            </span>
+            <small class="error" id="amountError"></small>
+          </label>
+
+          <fieldset class="field">
+            <legend id="categoryLabel">صرفتها على إيه؟</legend>
+            <div class="cats" id="cats"></div>
+          </fieldset>
+
+          <label class="field">
+            <span>ملاحظة <em class="optional">(اختياري)</em></span>
+            <input type="text" id="note" maxlength="60" placeholder="مثال: فاتورة النت">
+            <small class="hint">جملة قصيرة تفكرك العملية دي كانت إيه.</small>
+          </label>
+
+          <div class="row">
+            <label class="field">
+              <span>التاريخ</span>
+              <input type="date" id="date">
+            </label>
+            <label class="field" id="whoField" hidden>
+              <span>مين؟</span>
+              <select id="who"></select>
+            </label>
+          </div>
+
+          <button type="submit" class="btn"><i class="ico" data-icon="plus"></i> إضافة</button>
+        </form>
+      </section>
+
+      <section class="panel" aria-labelledby="chartTitle">
+        <h2 id="chartTitle"><i class="ico" data-icon="pie"></i> فلوسك راحت فين؟</h2>
+        <div class="chart-wrap">
+          <div class="donut" id="donut" role="img" aria-label="رسم دائري للمصاريف">
+            <div class="donut__center">
+              <small>المصاريف</small>
+              <strong id="donutTotal">0</strong>
+            </div>
+          </div>
+          <ul class="legend" id="legend"></ul>
+        </div>
+        <p class="empty" id="chartEmpty" hidden><i class="ico" data-icon="wallet"></i> أول ما تضيف مصروف هيظهر هنا توزيعه على التصنيفات.</p>
+      </section>
+
+    </div>
+
+    <section class="panel" aria-labelledby="listTitle">
+      <div class="panel__head">
+        <h2 id="listTitle"><i class="ico" data-icon="list"></i> كل العمليات</h2>
+        <div class="tools">
+          <select id="filterCategory" aria-label="فلتر التصنيف">
+            <option value="all">كل التصنيفات</option>
+          </select>
+          <select id="filterWho" aria-label="فلتر الشخص" hidden>
+            <option value="all">كل الأشخاص</option>
+          </select>
+          <button type="button" class="btn btn--ghost" id="exportBtn"><i class="ico" data-icon="download"></i> Excel</button>
+        </div>
+      </div>
+
+      <ul class="tx-list" id="txList"></ul>
+      <p class="empty" id="listEmpty" hidden><i class="ico" data-icon="wallet"></i> مفيش عمليات في الشهر ده لسه. ضيف أول عملية من الفورم.</p>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <span>Eng: Anas Mohamed</span>
+  </footer>
+
+  <!-- ===== Lock settings ===== -->
+  <dialog id="lockDialog" aria-labelledby="lockDlgTitle">
+    <div class="dlg__head">
+      <h2 id="lockDlgTitle"><i class="ico" data-icon="lock"></i> القفل بالرقم السري</h2>
+      <button type="button" class="icon-btn icon-btn--plain" data-close aria-label="إغلاق"><i class="ico" data-icon="x"></i></button>
+    </div>
+    <p class="dlg__note">قفل خصوصية بسيط على الجهاز ده، بيمنع أي حد يفتح الصفحة قدامك. هو مش تشفير كامل للبيانات.</p>
+    <p class="dlg__state" id="lockState"></p>
+
+    <div id="lockSetup">
+      <label class="field"><span>رقم سري جديد (4 أرقام)</span>
+        <input type="password" id="newPin" inputmode="numeric" maxlength="4" autocomplete="new-password" placeholder="••••"></label>
+      <label class="field" id="confirmPinField"><span>اكتبه تاني للتأكيد</span>
+        <input type="password" id="confirmPin" inputmode="numeric" maxlength="4" autocomplete="new-password" placeholder="••••"></label>
+    </div>
+    <label class="field" id="currentPinField" hidden><span>الرقم السري الحالي</span>
+      <input type="password" id="currentPin" inputmode="numeric" maxlength="4" autocomplete="current-password" placeholder="••••"></label>
+
+    <p class="dlg__msg" id="lockDlgMsg" role="alert"></p>
+    <div class="dlg__actions">
+      <button type="button" class="btn" id="enableLock">تفعيل القفل</button>
+      <button type="button" class="btn" id="lockNow" hidden><i class="ico" data-icon="lock"></i> اقفل دلوقتي</button>
+      <button type="button" class="btn btn--ghost" id="changePin" hidden>تغيير الرقم</button>
+      <button type="button" class="btn btn--ghost btn--danger" id="disableLock" hidden>إلغاء القفل</button>
+    </div>
+  </dialog>
+
+  <!-- ===== Family & backup ===== -->
+  <dialog id="familyDialog" aria-labelledby="famDlgTitle">
+    <div class="dlg__head">
+      <h2 id="famDlgTitle"><i class="ico" data-icon="users"></i> الأسرة والنسخ الاحتياطي</h2>
+      <button type="button" class="icon-btn icon-btn--plain" data-close aria-label="إغلاق"><i class="ico" data-icon="x"></i></button>
+    </div>
+    <p class="dlg__note">الموقع بيشتغل على جهازك بس، فمفيش مزامنة لحظية بين الأجهزة. بدل كده كل واحد بيبعت للتاني ملف بعملياته، والتاني يدمجه عنده.</p>
+
+    <h3>اسمك</h3>
+    <div class="inline">
+      <input type="text" id="myName" maxlength="20" placeholder="مثال: أنس" aria-label="اسمك">
+      <button type="button" class="btn btn--ghost" id="saveMyName">حفظ</button>
+    </div>
+
+    <h3>أفراد الأسرة</h3>
+    <ul class="members" id="memberList"></ul>
+    <div class="inline">
+      <input type="text" id="newMember" maxlength="20" placeholder="اسم فرد جديد" aria-label="اسم فرد جديد">
+      <button type="button" class="btn btn--ghost" id="addMember"><i class="ico" data-icon="plus"></i> إضافة</button>
+    </div>
+    <small class="hint">لما تضيف فرد، هيظهر اختيار "مين؟" في الفورم وفلتر في القائمة.</small>
+
+    <h3>نسخة احتياطية ومشاركة</h3>
+    <div class="dlg__actions dlg__actions--wrap">
+      <button type="button" class="btn" id="shareBackup"><i class="ico" data-icon="share"></i> ابعت نسخة</button>
+      <button type="button" class="btn btn--ghost" id="downloadBackup"><i class="ico" data-icon="download"></i> حمّل الملف</button>
+      <label class="btn btn--ghost file-btn"><i class="ico" data-icon="upload"></i> استيراد ودمج
+        <input type="file" id="importFile" accept=".json,application/json" hidden></label>
+    </div>
+    <p class="dlg__msg" id="familyMsg" role="status"></p>
+  </dialog>
+
+  <!-- ===== Install ===== -->
+  <dialog id="installDialog" aria-labelledby="insDlgTitle">
+    <div class="dlg__head">
+      <h2 id="insDlgTitle"><i class="ico" data-icon="smartphone"></i> ثبّت التطبيق على موبايلك</h2>
+      <button type="button" class="icon-btn icon-btn--plain" data-close aria-label="إغلاق"><i class="ico" data-icon="x"></i></button>
+    </div>
+    <p class="dlg__note">بعد التثبيت هتفتحه من أيقونة على شاشة الموبايل زي أي تطبيق، وبيشتغل حتى من غير نت.</p>
+    <div id="installNow" hidden>
+      <button type="button" class="btn" id="installGo"><i class="ico" data-icon="download"></i> ثبّت دلوقتي</button>
+    </div>
+    <div id="installSteps">
+      <h3>على أندرويد (Chrome)</h3>
+      <p>اضغط على القايمة (⋮) ثم <b>تثبيت التطبيق</b> أو <b>Add to Home screen</b>.</p>
+      <h3>على آيفون (Safari)</h3>
+      <p>اضغط زرار المشاركة ثم <b>Add to Home Screen</b>.</p>
+      <p class="dlg__note dlg__note--warn">التثبيت بيشتغل بس لما الموقع يكون مرفوع أونلاين على رابط https (زي Vercel). لو بتفتح الملف من جهازك مباشرة، التثبيت مش هيظهر.</p>
+    </div>
+  </dialog>
+
+  <script>
+"use strict";
+
+/* =====================================================================
+   مصاريفي الشهرية  |  Eng: Anas Mohamed
+   ===================================================================== */
+
+const KEYS = {
+  tx: "expense-calculator-v1",
+  prefs: "expense-calculator-prefs-v1",
+  lock: "expense-calculator-lock-v1"
+};
+
+const MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+
+/* ---------- Icons (inline SVG paths, no external library) ---------- */
+
+const ICONS = {
+  lock: '<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  smartphone: '<rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  calendar: '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/>',
+  "arrow-in": '<path d="M17 7 7 17"/><path d="M17 17H7V7"/>',
+  "arrow-out": '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
+  help: '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+  chevron: '<path d="m6 9 6 6 6-6"/>',
+  "plus-circle": '<circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/>',
+  plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  pie: '<path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>',
+  wallet: '<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>',
+  list: '<line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>',
+  upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/>',
+  share: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/>',
+  x: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  trash: '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>',
+  delete: '<path d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Z"/><line x1="18" x2="12" y1="9" y2="15"/><line x1="12" x2="18" y1="9" y2="15"/>',
+  utensils: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/>',
+  car: '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>',
+  receipt: '<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/>',
+  gamepad: '<line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258A4 4 0 0 0 17.32 5z"/>',
+  book: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+  dots: '<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>',
+  briefcase: '<path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/>',
+  laptop: '<path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"/>',
+  gift: '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>'
+};
+
+/* name + icon + color for every category */
+const CATEGORY_META = {
+  expense: {
+    "أكل": { icon: "utensils", color: "#f97316" },
+    "مواصلات": { icon: "car", color: "#3b82f6" },
+    "فواتير": { icon: "receipt", color: "#8b5cf6" },
+    "ترفيه": { icon: "gamepad", color: "#ec4899" },
+    "تعليم": { icon: "book", color: "#ca8a04" },
+    "أخرى": { icon: "dots", color: "#64748b" }
+  },
+  income: {
+    "مرتب": { icon: "briefcase", color: "#16a34a" },
+    "عمل حر": { icon: "laptop", color: "#0891b2" },
+    "هدية": { icon: "gift", color: "#db2777" },
+    "أخرى": { icon: "dots", color: "#64748b" }
+  }
+};
+
+const FALLBACK_META = { icon: "dots", color: "#64748b" };
+
+function metaFor(type, category) {
+  return (CATEGORY_META[type] && CATEGORY_META[type][category]) || FALLBACK_META;
+}
+
+function svg(name) {
+  return '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" ' +
+    'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[name] || "") + "</svg>";
+}
+
+function paintIcons(root) {
+  root.querySelectorAll("[data-icon]").forEach(function (el) {
+    el.innerHTML = svg(el.getAttribute("data-icon"));
+  });
+}
+
+/* ---------- Tiny helpers ---------- */
+
+const $ = function (id) { return document.getElementById(id); };
+const root = document.documentElement;
+
+function pad(n) { return String(n).padStart(2, "0"); }
+
+function todayString() {
+  const d = new Date();
+  return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+}
+
+function prettyDate(value) {
+  const parts = value.split("-").map(Number);
+  return pad(parts[2]) + " " + MONTHS[parts[1] - 1];
+}
+
+function formatNumber(value) {
+  return (Math.round(value * 100) / 100).toLocaleString("en-US", { maximumFractionDigits: 2 });
+}
+
+function formatMoney(value) {
+  return formatNumber(value) + " ج.م";
+}
+
+function cleanName(value) {
+  return String(value || "").replace(/\s+/g, " ").trim().slice(0, 20);
+}
+
+function newId() {
+  return Date.now() * 1000 + Math.floor(Math.random() * 1000);
+}
+
+/* ---------- Storage (localStorage → sessionStorage → memory) ---------- */
+
+const WARNING_NO_STORAGE =
+  "الحفظ مش شغال في المتصفح ده، فالأرقام هتختفي لما تقفل الصفحة. " +
+  "غالبًا الملف مفتوح من جوه تطبيق أو معاينة. حمّل الملف وافتحه من Chrome أو Safari.";
+const WARNING_SESSION_ONLY =
+  "الحفظ مؤقت: الأرقام هتفضل لحد ما تقفل التبويب بس. افتح الملف من Chrome أو Safari عشان تتحفظ دايمًا.";
+
+function probeStorage(getter, kind) {
+  try {
+    const store = getter();
+    store.setItem("__expense_test__", "1");
+    store.removeItem("__expense_test__");
+    return { store: store, kind: kind };
+  } catch (err) {
+    return null;
+  }
+}
+
+const picked =
+  probeStorage(function () { return window.localStorage; }, "local") ||
+  probeStorage(function () { return window.sessionStorage; }, "session");
+
+function storeGet(key) {
+  if (!picked) return null;
+  try { return picked.store.getItem(key); } catch (err) { return null; }
+}
+
+function storeSet(key, value) {
+  if (!picked) return false;
+  try {
+    picked.store.setItem(key, value);
+    return picked.store.getItem(key) === value;
+  } catch (err) {
+    return false;
+  }
+}
+
+function storeRemove(key) {
+  if (!picked) return;
+  try { picked.store.removeItem(key); } catch (err) { /* ignore */ }
+}
+
+function loadJSON(key, fallback) {
+  try {
+    const raw = storeGet(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (err) {
+    return fallback;
+  }
+}
+
+/* ---------- Data ---------- */
+
+function cleanTx(t) {
+  if (!t || typeof t !== "object") return null;
+  const type = t.type === "income" ? "income" : t.type === "expense" ? "expense" : null;
+  const amount = Number(t.amount);
+  const date = typeof t.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(t.date) ? t.date : null;
+  if (!type || !isFinite(amount) || amount <= 0 || !date) return null;
+  const id = Number.isFinite(Number(t.id)) ? Number(t.id) : newId();
+  return {
+    id: id,
+    type: type,
+    amount: amount,
+    category: String(t.category || "أخرى").slice(0, 30),
+    note: String(t.note || "").slice(0, 60),
+    date: date,
+    who: cleanName(t.who)
+  };
+}
+
+function loadTransactions() {
+  const data = loadJSON(KEYS.tx, []);
+  return Array.isArray(data) ? data.map(cleanTx).filter(Boolean) : [];
+}
+
+function loadPrefs() {
+  const raw = loadJSON(KEYS.prefs, null) || {};
+  const myName = cleanName(raw.myName) || "أنا";
+  let members = Array.isArray(raw.members) ? raw.members.map(cleanName).filter(Boolean) : [];
+  if (members.indexOf(myName) === -1) members.unshift(myName);
+  members = Array.from(new Set(members)).slice(0, 8);
+  return { myName: myName, members: members };
+}
+
+function loadLock() {
+  const raw = loadJSON(KEYS.lock, null);
+  return raw && raw.hash && raw.salt ? raw : null;
+}
+
+let transactions = loadTransactions();
+let prefs = loadPrefs();
+let lockData = loadLock();
+let hiddenAt = 0;
+
+function saveTransactions() {
+  return storeSet(KEYS.tx, JSON.stringify(transactions));
+}
+
+function savePrefs() {
+  return storeSet(KEYS.prefs, JSON.stringify(prefs));
+}
+
+function isFamilyMode() {
+  return prefs.members.length > 1;
+}
+
+function allPeople() {
+  const set = new Set(prefs.members);
+  transactions.forEach(function (t) { if (t.who) set.add(t.who); });
+  return Array.from(set);
+}
+
+/* ---------- Status line ---------- */
+
+function showStatus(message, isWarning) {
+  $("saveStatus").textContent = message;
+  $("saveStatus").classList.toggle("is-warning", Boolean(isWarning));
+}
+
+function showStorageState() {
+  if (!picked) showStatus(WARNING_NO_STORAGE, true);
+  else if (picked.kind === "session") showStatus(WARNING_SESSION_ONLY, true);
+  else showStatus("بياناتك بتتحفظ تلقائيًا على جهازك.", false);
+}
+
+function reportSave(ok, successMessage) {
+  if (!ok) showStatus(picked && picked.kind === "session" ? WARNING_SESSION_ONLY : WARNING_NO_STORAGE, true);
+  else if (picked.kind === "session") showStatus(WARNING_SESSION_ONLY, true);
+  else showStatus(successMessage, false);
+}
+
+/* ---------- Form ---------- */
+
+function selectedType() {
+  return document.querySelector('input[name="type"]:checked').value;
+}
+
+function selectedCategory() {
+  const checked = document.querySelector('input[name="category"]:checked');
+  return checked ? checked.value : "أخرى";
+}
+
+function renderCats() {
+  const type = selectedType();
+  const box = $("cats");
+  box.innerHTML = "";
+  Object.keys(CATEGORY_META[type]).forEach(function (name, i) {
+    const meta = CATEGORY_META[type][name];
+
+    const wrap = document.createElement("div");
+    wrap.className = "cat";
+    wrap.style.setProperty("--c", meta.color);
+
+    const input = document.createElement("input");
+    input.type = "radio";
+    input.name = "category";
+    input.id = "cat-" + i;
+    input.value = name;
+    if (i === 0) input.checked = true;
+
+    const label = document.createElement("label");
+    label.htmlFor = input.id;
+
+    const icon = document.createElement("span");
+    icon.className = "cat__icon";
+    icon.innerHTML = svg(meta.icon);
+
+    const text = document.createElement("span");
+    text.textContent = name;
+
+    label.append(icon, text);
+    wrap.append(input, label);
+    box.appendChild(wrap);
+  });
+  $("categoryLabel").textContent = type === "income" ? "الفلوس دي جاية منين؟" : "صرفتها على إيه؟";
+}
+
+function fillFilterCategory() {
+  const names = new Set();
+  Object.keys(CATEGORY_META).forEach(function (type) {
+    Object.keys(CATEGORY_META[type]).forEach(function (n) { names.add(n); });
+  });
+  names.forEach(function (name) {
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    $("filterCategory").appendChild(opt);
+  });
+}
+
+function fillSelect(select, names, keepValue) {
+  const previous = keepValue ? select.value : "";
+  const hasAll = select.id === "filterWho";
+  select.innerHTML = "";
+  if (hasAll) {
+    const all = document.createElement("option");
+    all.value = "all";
+    all.textContent = "كل الأشخاص";
+    select.appendChild(all);
+  }
+  names.forEach(function (name) {
+    const opt = document.createElement("option");
+    opt.value = name;
+    opt.textContent = name;
+    select.appendChild(opt);
+  });
+  const values = Array.from(select.options).map(function (o) { return o.value; });
+  select.value = values.indexOf(previous) !== -1 ? previous : (hasAll ? "all" : prefs.myName);
+}
+
+function syncFamilyUI() {
+  const family = isFamilyMode();
+  $("whoField").hidden = !family;
+  $("filterWho").hidden = !family;
+  fillSelect($("who"), prefs.members, true);
+  fillSelect($("filterWho"), allPeople(), true);
+  if (!family) $("filterWho").value = "all";
+}
+
+function showAmountError(message) {
+  $("amountError").textContent = message;
+  $("amount").classList.toggle("invalid", Boolean(message));
+}
+
+function handleSubmit(event) {
+  event.preventDefault();
+
+  const amount = parseFloat($("amount").value);
+  if (!amount || amount <= 0) {
+    showAmountError("اكتب مبلغ أكبر من صفر");
+    $("amount").focus();
+    return;
+  }
+  showAmountError("");
+
+  const tx = {
+    id: newId(),
+    type: selectedType(),
+    amount: amount,
+    category: selectedCategory(),
+    note: $("note").value.trim(),
+    date: $("date").value || todayString(),
+    who: isFamilyMode() ? cleanName($("who").value) : ""
+  };
+
+  transactions.push(tx);
+  const saved = saveTransactions();
+
+  $("monthPicker").value = tx.date.slice(0, 7);
+  $("amount").value = "";
+  $("note").value = "";
+  $("amount").focus();
+
+  render();
+  reportSave(saved, "تمت الإضافة وحُفظت على جهازك.");
+}
+
+function deleteTransaction(id) {
+  transactions = transactions.filter(function (t) { return t.id !== id; });
+  const saved = saveTransactions();
+  syncFamilyUI();
+  render();
+  reportSave(saved, "تم الحذف.");
+}
+
+/* ---------- Rendering ---------- */
+
+function monthList() {
+  const month = $("monthPicker").value;
+  return transactions.filter(function (t) { return t.date.slice(0, 7) === month; });
+}
+
+function renderHero(list) {
+  let income = 0;
+  let expense = 0;
+  list.forEach(function (t) {
+    if (t.type === "income") income += t.amount;
+    else expense += t.amount;
+  });
+  const left = income - expense;
+
+  $("totalIncome").textContent = formatMoney(income);
+  $("totalExpense").textContent = formatMoney(expense);
+  $("balance").textContent = (left < 0 ? "\u2212" : "") + formatMoney(Math.abs(left));
+  $("heroCard").classList.toggle("is-negative", left < 0);
+}
+
+function renderChart(list) {
+  const totals = {};
+  let sum = 0;
+  list.forEach(function (t) {
+    if (t.type !== "expense") return;
+    totals[t.category] = (totals[t.category] || 0) + t.amount;
+    sum += t.amount;
+  });
+
+  const legend = $("legend");
+  legend.innerHTML = "";
+  $("donutTotal").textContent = formatNumber(sum);
+
+  if (sum === 0) {
+    $("donut").style.background = "";
+    $("chartEmpty").hidden = false;
+    return;
+  }
+  $("chartEmpty").hidden = true;
+
+  const entries = Object.keys(totals)
+    .map(function (name) { return { name: name, value: totals[name] }; })
+    .sort(function (a, b) { return b.value - a.value; });
+
+  let start = 0;
+  const stops = entries.map(function (item) {
+    const end = start + (item.value / sum) * 100;
+    const part = metaFor("expense", item.name).color + " " + start.toFixed(2) + "% " + end.toFixed(2) + "%";
+    start = end;
+    return part;
+  });
+  $("donut").style.background = "conic-gradient(" + stops.join(", ") + ")";
+
+  entries.forEach(function (item) {
+    const meta = metaFor("expense", item.name);
+    const li = document.createElement("li");
+
+    const icon = document.createElement("span");
+    icon.className = "cat__icon";
+    icon.style.setProperty("--c", meta.color);
+    icon.innerHTML = svg(meta.icon);
+
+    const name = document.createElement("span");
+    name.className = "name";
+    name.textContent = item.name;
+
+    const amt = document.createElement("span");
+    amt.className = "amt";
+    amt.textContent = formatNumber(item.value);
+
+    const pct = document.createElement("span");
+    pct.className = "pct";
+    pct.textContent = Math.round((item.value / sum) * 100) + "%";
+
+    li.append(icon, name, amt, pct);
+    legend.appendChild(li);
+  });
+}
+
+function renderList(list) {
+  const catFilter = $("filterCategory").value;
+  const whoFilter = isFamilyMode() ? $("filterWho").value : "all";
+
+  const rows = list
+    .filter(function (t) { return catFilter === "all" || t.category === catFilter; })
+    .filter(function (t) { return whoFilter === "all" || (t.who || prefs.myName) === whoFilter; })
+    .sort(function (a, b) { return b.date.localeCompare(a.date) || b.id - a.id; });
+
+  const ul = $("txList");
+  ul.innerHTML = "";
+  $("listEmpty").hidden = rows.length > 0;
+
+  rows.forEach(function (t) {
+    const meta = metaFor(t.type, t.category);
+    const li = document.createElement("li");
+    li.className = "tx";
+
+    const icon = document.createElement("span");
+    icon.className = "tx__icon";
+    icon.style.setProperty("--c", meta.color);
+    icon.innerHTML = svg(meta.icon);
+
+    const main = document.createElement("div");
+    main.className = "tx__main";
+    const title = document.createElement("strong");
+    title.textContent = t.category;
+    const note = document.createElement("small");
+    note.textContent = t.note || (t.type === "income" ? "دخل" : "مصروف");
+    main.append(title, note);
+
+    const metaBox = document.createElement("div");
+    metaBox.className = "tx__meta";
+    const amt = document.createElement("span");
+    amt.className = "tx__amt " + (t.type === "income" ? "amt--income" : "amt--expense");
+    amt.textContent = (t.type === "income" ? "+ " : "\u2212 ") + formatMoney(t.amount);
+    const sub = document.createElement("small");
+    sub.textContent = prettyDate(t.date);
+    if (isFamilyMode()) {
+      const who = document.createElement("span");
+      who.className = "person";
+      who.textContent = t.who || prefs.myName;
+      sub.appendChild(who);
+    }
+    metaBox.append(amt, sub);
+
+    const del = document.createElement("button");
+    del.type = "button";
+    del.className = "del";
+    del.innerHTML = svg("trash");
+    del.setAttribute("aria-label", "حذف عملية " + t.category);
+    del.addEventListener("click", function () { deleteTransaction(t.id); });
+
+    li.append(icon, main, metaBox, del);
+    ul.appendChild(li);
+  });
+}
+
+function render() {
+  const list = monthList();
+  renderHero(list);
+  renderChart(list);
+  renderList(list);
+}
+
+/* ---------- Files: CSV, backup, share ---------- */
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
+
+function exportCsv() {
+  const header = ["التاريخ", "النوع", "التصنيف", "الملاحظة", "المبلغ", "الشخص"];
+  const lines = monthList().map(function (t) {
+    const note = '"' + t.note.replace(/"/g, '""') + '"';
+    return [t.date, t.type === "income" ? "دخل" : "مصروف", t.category, note, t.amount, t.who || prefs.myName].join(",");
+  });
+  const csv = "\uFEFF" + [header.join(",")].concat(lines).join("\n");
+  downloadBlob(new Blob([csv], { type: "text/csv;charset=utf-8;" }), "expenses-" + $("monthPicker").value + ".csv");
+}
+
+function backupFile() {
+  const data = {
+    app: "expense-calculator",
+    version: 2,
+    exportedAt: new Date().toISOString(),
+    myName: prefs.myName,
+    members: prefs.members,
+    transactions: transactions.map(function (t) {
+      return Object.assign({}, t, { who: t.who || prefs.myName });
+    })
+  };
+  return new File([JSON.stringify(data, null, 2)], "expenses-backup-" + todayString() + ".json", { type: "application/json" });
+}
+
+function setMsg(el, text, ok) {
+  el.textContent = text;
+  el.classList.toggle("ok", Boolean(ok));
+}
+
+async function shareBackup() {
+  const file = backupFile();
+  const msg = $("familyMsg");
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: "نسخة مصاريفي" });
+      setMsg(msg, "تمت المشاركة.", true);
+    } catch (err) {
+      if (err && err.name !== "AbortError") {
+        downloadBlob(file, file.name);
+        setMsg(msg, "اتعذرت المشاركة المباشرة، فنزّلنا الملف. ابعته بنفسك (واتساب مثلاً).", true);
+      }
+    }
+  } else {
+    downloadBlob(file, file.name);
+    setMsg(msg, "الجهاز ده مش بيدعم المشاركة المباشرة، فنزّلنا الملف. ابعته بنفسك (واتساب مثلاً) وخلي التاني يعمل استيراد.", true);
+  }
+}
+
+async function importBackup(file) {
+  const msg = $("familyMsg");
+  try {
+    const data = JSON.parse(await file.text());
+    const incoming = Array.isArray(data) ? data : data && data.transactions;
+    if (!Array.isArray(incoming)) throw new Error("bad file");
+
+    const fromName = !Array.isArray(data) ? cleanName(data.myName) : "";
+    const existing = new Set(transactions.map(function (t) { return t.id; }));
+    let added = 0;
+    let skipped = 0;
+    let latest = "";
+
+    incoming.forEach(function (raw) {
+      const tx = cleanTx(raw);
+      if (!tx || existing.has(tx.id)) { skipped++; return; }
+      if (!tx.who && fromName) tx.who = fromName;
+      existing.add(tx.id);
+      transactions.push(tx);
+      added++;
+      if (tx.date > latest) latest = tx.date;
+    });
+
+    const people = new Set(prefs.members);
+    if (!Array.isArray(data) && Array.isArray(data.members)) data.members.forEach(function (n) { if (cleanName(n)) people.add(cleanName(n)); });
+    transactions.forEach(function (t) { if (t.who) people.add(t.who); });
+    prefs.members = Array.from(people).slice(0, 8);
+
+    const saved = saveTransactions() && savePrefs();
+    if (latest) $("monthPicker").value = latest.slice(0, 7);
+    refreshFamilyDialog();
+    syncFamilyUI();
+    render();
+
+    setMsg(msg, "تم دمج " + added + " عملية جديدة" + (skipped ? " (وتخطّينا " + skipped + " موجودة أو غير صالحة)" : "") +
+      (saved ? "." : ". تنبيه: الحفظ على الجهاز مش شغال."), saved);
+  } catch (err) {
+    setMsg(msg, "الملف ده مش نسخة احتياطية صالحة من الموقع.", false);
+  }
+}
+
+/* ---------- Dialogs ---------- */
+
+function openDialog(dlg) {
+  if (typeof dlg.showModal === "function") dlg.showModal();
+  else dlg.setAttribute("open", "");
+}
+
+function closeDialog(dlg) {
+  if (typeof dlg.close === "function") dlg.close();
+  else dlg.removeAttribute("open");
+}
+
+/* ---------- Family dialog ---------- */
+
+function refreshFamilyDialog() {
+  $("myName").value = prefs.myName;
+  const ul = $("memberList");
+  ul.innerHTML = "";
+  prefs.members.forEach(function (name) {
+    const li = document.createElement("li");
+    const label = document.createElement("span");
+    label.textContent = name + (name === prefs.myName ? " (أنا)" : "");
+    li.appendChild(label);
+    if (name !== prefs.myName) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.innerHTML = svg("x");
+      btn.setAttribute("aria-label", "حذف " + name);
+      btn.addEventListener("click", function () {
+        prefs.members = prefs.members.filter(function (n) { return n !== name; });
+        savePrefs();
+        refreshFamilyDialog();
+        syncFamilyUI();
+        render();
+      });
+      li.appendChild(btn);
+    }
+    ul.appendChild(li);
+  });
+}
+
+function saveMyName() {
+  const name = cleanName($("myName").value);
+  if (!name) { setMsg($("familyMsg"), "اكتب اسمك.", false); return; }
+  const old = prefs.myName;
+  if (name !== old) {
+    transactions.forEach(function (t) { if ((t.who || old) === old && t.who) t.who = name; });
+    prefs.members = prefs.members.map(function (n) { return n === old ? name : n; });
+    prefs.myName = name;
+    prefs.members = Array.from(new Set(prefs.members));
+    saveTransactions();
+  }
+  savePrefs();
+  refreshFamilyDialog();
+  syncFamilyUI();
+  render();
+  setMsg($("familyMsg"), "تم حفظ اسمك.", true);
+}
+
+function addMember() {
+  const name = cleanName($("newMember").value);
+  if (!name) return;
+  if (prefs.members.indexOf(name) !== -1) { setMsg($("familyMsg"), "الاسم ده موجود بالفعل.", false); return; }
+  if (prefs.members.length >= 8) { setMsg($("familyMsg"), "الحد الأقصى 8 أفراد.", false); return; }
+  prefs.members.push(name);
+  savePrefs();
+  $("newMember").value = "";
+  refreshFamilyDialog();
+  syncFamilyUI();
+  render();
+  setMsg($("familyMsg"), "تمت إضافة " + name + ".", true);
+}
+
+/* ---------- PIN lock ---------- */
+
+async function hashPin(pin, salt, algo) {
+  const text = salt + ":" + pin;
+  if (algo === "sha256" && window.crypto && window.crypto.subtle) {
+    const buf = await window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+  }
+  let h = 5381;
+  for (let i = 0; i < text.length; i++) h = ((h << 5) + h + text.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(16);
+}
+
+function randomSalt() {
+  if (window.crypto && window.crypto.getRandomValues) {
+    return Array.from(window.crypto.getRandomValues(new Uint8Array(12))).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+  }
+  return String(Math.random()).slice(2) + String(Date.now());
+}
+
+async function makeLock(pin) {
+  const algo = window.crypto && window.crypto.subtle ? "sha256" : "simple";
+  const salt = randomSalt();
+  return { salt: salt, algo: algo, hash: await hashPin(pin, salt, algo) };
+}
+
+async function checkPin(pin) {
+  if (!lockData) return false;
+  return (await hashPin(pin, lockData.salt, lockData.algo)) === lockData.hash;
+}
+
+let pinBuffer = "";
+let failedTries = 0;
+let blockedUntil = 0;
+
+function updateDots() {
+  Array.from($("pinDots").children).forEach(function (dot, i) {
+    dot.classList.toggle("on", i < pinBuffer.length);
+  });
+}
+
+function lockNow() {
+  if (!lockData) return;
+  pinBuffer = "";
+  $("lockMsg").textContent = "";
+  updateDots();
+  root.classList.add("locked");
+}
+
+function unlockApp() {
+  root.classList.remove("locked");
+  pinBuffer = "";
+  failedTries = 0;
+  updateDots();
+}
+
+async function pressKey(key) {
+  if (!root.classList.contains("locked")) return;
+  if (Date.now() < blockedUntil) return;
+
+  if (key === "back") pinBuffer = pinBuffer.slice(0, -1);
+  else if (/^\d$/.test(key) && pinBuffer.length < 4) pinBuffer += key;
+  $("lockMsg").textContent = "";
+  updateDots();
+
+  if (pinBuffer.length === 4) {
+    if (await checkPin(pinBuffer)) {
+      unlockApp();
+    } else {
+      failedTries++;
+      pinBuffer = "";
+      const dots = $("pinDots");
+      dots.classList.remove("shake");
+      void dots.offsetWidth;
+      dots.classList.add("shake");
+      if (failedTries >= 5) {
+        blockedUntil = Date.now() + 15000;
+        failedTries = 0;
+        $("lockMsg").textContent = "محاولات كتير غلط. استنى 15 ثانية وجرّب تاني.";
+      } else {
+        $("lockMsg").textContent = "الرقم غلط، جرّب تاني.";
+      }
+      setTimeout(updateDots, 350);
+    }
+  }
+}
+
+function forgotPin() {
+  const ok = window.confirm("لو كملت، هيتمسح الرقم السري وكل العمليات المسجلة على الجهاز ده. متأكد؟");
+  if (!ok) return;
+  storeRemove(KEYS.lock);
+  storeRemove(KEYS.tx);
+  lockData = null;
+  transactions = [];
+  unlockApp();
+  syncFamilyUI();
+  render();
+  showStatus("تم مسح الرقم السري والبيانات.", false);
+}
+
+function refreshLockDialog() {
+  const enabled = Boolean(lockData);
+  $("lockState").textContent = enabled ? "القفل شغال" : "القفل مش شغال";
+  $("currentPinField").hidden = !enabled;
+  $("confirmPinField").hidden = enabled;
+  $("enableLock").hidden = enabled;
+  $("lockNow").hidden = !enabled;
+  $("changePin").hidden = !enabled;
+  $("disableLock").hidden = !enabled;
+  $("newPin").previousElementSibling.textContent = enabled ? "رقم سري جديد (لو عاوز تغيّره)" : "رقم سري جديد (4 أرقام)";
+  ["newPin", "confirmPin", "currentPin"].forEach(function (id) { $(id).value = ""; });
+  setMsg($("lockDlgMsg"), "", false);
+}
+
+const PIN_PATTERN = /^\d{4}$/;
+
+async function enableLock() {
+  const msg = $("lockDlgMsg");
+  if (!picked) { setMsg(msg, "الحفظ مش شغال في المتصفح ده، فالقفل مش هيشتغل.", false); return; }
+  const pin = $("newPin").value;
+  if (!PIN_PATTERN.test(pin)) { setMsg(msg, "الرقم السري لازم 4 أرقام.", false); return; }
+  if (pin !== $("confirmPin").value) { setMsg(msg, "الرقمين مش زي بعض.", false); return; }
+  lockData = await makeLock(pin);
+  if (!storeSet(KEYS.lock, JSON.stringify(lockData))) {
+    lockData = null;
+    setMsg(msg, "معرفناش نحفظ الرقم السري على الجهاز ده.", false);
+    return;
+  }
+  refreshLockDialog();
+  setMsg(msg, "تم تفعيل القفل. هيطلب الرقم كل ما تفتح الصفحة.", true);
+}
+
+async function changePin() {
+  const msg = $("lockDlgMsg");
+  if (!(await checkPin($("currentPin").value))) { setMsg(msg, "الرقم الحالي غلط.", false); return; }
+  const pin = $("newPin").value;
+  if (!PIN_PATTERN.test(pin)) { setMsg(msg, "اكتب الرقم الجديد (4 أرقام).", false); return; }
+  lockData = await makeLock(pin);
+  storeSet(KEYS.lock, JSON.stringify(lockData));
+  refreshLockDialog();
+  setMsg(msg, "تم تغيير الرقم السري.", true);
+}
+
+async function disableLock() {
+  const msg = $("lockDlgMsg");
+  if (!(await checkPin($("currentPin").value))) { setMsg(msg, "اكتب الرقم الحالي الصح الأول.", false); return; }
+  storeRemove(KEYS.lock);
+  lockData = null;
+  refreshLockDialog();
+  setMsg(msg, "تم إلغاء القفل.", true);
+}
+
+/* ---------- Install (PWA) ---------- */
+
+let deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", function (event) {
+  event.preventDefault();
+  deferredPrompt = event;
+});
+
+window.addEventListener("appinstalled", function () {
+  deferredPrompt = null;
+  $("installBtn").hidden = true;
+});
+
+function openInstall() {
+  $("installNow").hidden = !deferredPrompt;
+  openDialog($("installDialog"));
+}
+
+async function runInstall() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  try { await deferredPrompt.userChoice; } catch (err) { /* ignore */ }
+  deferredPrompt = null;
+  closeDialog($("installDialog"));
+}
+
+/* ---------- Start ---------- */
+
+function init() {
+  paintIcons(document);
+
+  const today = todayString();
+  $("date").value = today;
+  $("monthPicker").value = today.slice(0, 7);
+
+  renderCats();
+  fillFilterCategory();
+  syncFamilyUI();
+
+  document.querySelectorAll('input[name="type"]').forEach(function (radio) {
+    radio.addEventListener("change", renderCats);
+  });
+  $("txForm").addEventListener("submit", handleSubmit);
+  $("amount").addEventListener("input", function () { showAmountError(""); });
+  $("monthPicker").addEventListener("change", render);
+  $("filterCategory").addEventListener("change", render);
+  $("filterWho").addEventListener("change", render);
+  $("exportBtn").addEventListener("click", exportCsv);
+
+  /* dialogs */
+  document.querySelectorAll("dialog [data-close]").forEach(function (btn) {
+    btn.addEventListener("click", function () { closeDialog(btn.closest("dialog")); });
+  });
+  document.querySelectorAll("dialog").forEach(function (dlg) {
+    dlg.addEventListener("click", function (e) { if (e.target === dlg) closeDialog(dlg); });
+  });
+
+  $("familyBtn").addEventListener("click", function () {
+    refreshFamilyDialog();
+    setMsg($("familyMsg"), "", false);
+    openDialog($("familyDialog"));
+  });
+  $("saveMyName").addEventListener("click", saveMyName);
+  $("addMember").addEventListener("click", addMember);
+  $("newMember").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); addMember(); } });
+  $("shareBackup").addEventListener("click", shareBackup);
+  $("downloadBackup").addEventListener("click", function () {
+    const file = backupFile();
+    downloadBlob(file, file.name);
+    setMsg($("familyMsg"), "تم تنزيل النسخة الاحتياطية.", true);
+  });
+  $("importFile").addEventListener("change", function () {
+    const file = $("importFile").files[0];
+    $("importFile").value = "";
+    if (file) importBackup(file);
+  });
+
+  $("lockBtn").addEventListener("click", function () {
+    refreshLockDialog();
+    openDialog($("lockDialog"));
+  });
+  $("enableLock").addEventListener("click", enableLock);
+  $("changePin").addEventListener("click", changePin);
+  $("disableLock").addEventListener("click", disableLock);
+  $("lockNow").addEventListener("click", function () {
+    closeDialog($("lockDialog"));
+    lockNow();
+  });
+
+  $("keypad").addEventListener("click", function (e) {
+    const btn = e.target.closest("button[data-key]");
+    if (btn) pressKey(btn.getAttribute("data-key"));
+  });
+  document.addEventListener("keydown", function (e) {
+    if (!root.classList.contains("locked")) return;
+    if (/^\d$/.test(e.key)) pressKey(e.key);
+    else if (e.key === "Backspace") pressKey("back");
+  });
+  $("forgotPin").addEventListener("click", forgotPin);
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+      hiddenAt = Date.now();
+    } else if (lockData && hiddenAt && Date.now() - hiddenAt > 60000) {
+      lockNow();
+    }
+  });
+
+  /* install */
+  const standalone = (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) || window.navigator.standalone;
+  if (standalone) $("installBtn").hidden = true;
+  $("installBtn").addEventListener("click", openInstall);
+  $("installGo").addEventListener("click", runInstall);
+
+  if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () { /* optional */ });
+    });
+  }
+
+  /* if the lock was set but could not be read (e.g. storage blocked), do not trap the user */
+  if (!lockData && root.classList.contains("locked")) root.classList.remove("locked");
+
+  render();
+  showStorageState();
+}
+
+init();
+
+</script>
+</body>
+</html>
